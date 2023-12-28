@@ -5,6 +5,7 @@ const db = mysql.createPool({
   user: 'root',
   password: 'admin123',
   database: 'my_db01',
+  timezone: '08:00', // 解决时区问题
 })
 
 module.exports = db

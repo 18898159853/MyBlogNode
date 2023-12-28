@@ -25,5 +25,12 @@ router.post(
   expressJoi(reg_updatelist_schema),
   user_handler.updatelist
 )
-
+// 获取日历数据
+router.post('/getcalendar', user_handler.calendarlist)
+//添加日历数据
+router.post('/addcalendar', user_handler.addcalendar)
+// 编辑日历数据
+router.post('/editcalendar', user_handler.editcalendar)
+// 删除日历数据
+router.post('/delcalendar', user_handler.delcalendar)
 module.exports = router
