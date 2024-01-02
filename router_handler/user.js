@@ -132,7 +132,7 @@ exports.updatelist = (req, res) => {
   })
 }
 
-// 日历的
+// 日历列表
 exports.calendarlist = (req, res) => {
   const sql = 'select * from ev_calendar '
   db.query(sql, (err, results) => {
@@ -168,8 +168,7 @@ exports.editcalendar = (req, res) => {
     })
   })
 }
-
-//删除用户
+//删除日历
 exports.delcalendar = (req, res) => {
   const id = req.body.id
   const sql = 'delete from ev_calendar where id = ? '
@@ -180,5 +179,16 @@ exports.delcalendar = (req, res) => {
       status: 0,
       message: '删除成功',
     })
+  })
+}
+
+
+
+exports.upload=(req,res) =>{
+  const url = "http://localhost:3007/upload/" + req.file.filename
+  res.send({
+    status:0,
+    message:'上传成功',
+    url:url
   })
 }
