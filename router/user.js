@@ -43,6 +43,7 @@ const storage = multer.diskStorage({
 */
 // 得到multer对象  传入storage对象
 const upload = multer({ storage })
+
 router.post('/upload', upload.single("file"), user_handler.upload)
 // 获取日历数据
 router.post('/getcalendar', user_handler.calendarlist)
@@ -52,7 +53,9 @@ router.post('/addcalendar', user_handler.addcalendar)
 router.post('/editcalendar', user_handler.editcalendar)
 // 删除日历数据
 router.post('/delcalendar', user_handler.delcalendar)
+const artcate_handler = require('../router_handler/artcate')
 
+router.get('/cates', artcate_handler.getArticleCates)
 
 
 module.exports = router

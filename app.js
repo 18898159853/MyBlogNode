@@ -40,7 +40,7 @@ app.use('/my', userinfoRouter)
 const artCateRouter = require('./router/artcate')
 app.use('/my/article', artCateRouter)
 
-// 导入并使用文章分类路由模块
+// 导入并使用文章列表路由模块
 const artListCateRouter = require('./router/artcatelist')
 app.use('/api', artListCateRouter)
 
