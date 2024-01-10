@@ -11,21 +11,21 @@ const {
 } = require('../schema/user')
 // 获取文章分类的列表数据
 router.get('/cates', artcate_handler.getArticleCates)
-// router.post(
-//   '/addcate',
-//   expressJoi(reg_artacte_schema),
-//   artcate_handler.addArticleCate
-// )
-// router.post(
-//   '/editcate',
-//   expressJoi(reg_editartacte_schema),
-//   artcate_handler.editArticleCate
-// )
-// router.get(
-//   '/delcate/:id',
-//   expressJoi(reg_delartacte_schema),
-//   artcate_handler.delArticleCate
-// )
+router.post(
+  '/addcate',
+  expressJoi(reg_artacte_schema),
+  artcate_handler.addArticleCate
+)
+router.post(
+  '/editcate',
+  expressJoi(reg_editartacte_schema),
+  artcate_handler.editArticleCate
+)
+router.get(
+  '/delcate/:id',
+  expressJoi(reg_delartacte_schema),
+  artcate_handler.delArticleCate
+)
 
 // 向外共享路由对象
 module.exports = router

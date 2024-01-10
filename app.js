@@ -5,6 +5,7 @@ const app = express()
 const joi = require('@hapi/joi')
 // 导入并配置 cors 中间件
 const cors = require('cors')
+const path = require('path');
 app.use(cors())
 // 配置解析表单数据的中间件，注意：这个中间件，只能解析 application/x-www-form-urlencoded 格式的表单数据
 app.use(express.urlencoded({ extended: false }))
@@ -24,7 +25,7 @@ app.use((req, res, next) => {
 const expressJWT = require('express-jwt')
 const config = require('./config')
 app.use(
-  expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api/] })
+  expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api/,'/my/article/cates'] })
 )
 // 部署静态资源, 部署之后即可通过域名访问文件
 app.use(express.static("upload"))
@@ -43,7 +44,8 @@ app.use('/my/article', artCateRouter)
 // 导入并使用文章列表路由模块
 const artListCateRouter = require('./router/artcatelist')
 app.use('/api', artListCateRouter)
-
+// 访问图片资源
+app.use('/api', express.static(path.join(__dirname, 'img')));
 // 定义错误级别的中间件
 app.use((err, req, res, next) => {
   // 验证失败导致的错误
