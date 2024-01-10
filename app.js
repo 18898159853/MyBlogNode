@@ -6,6 +6,9 @@ const joi = require('@hapi/joi')
 // 导入并配置 cors 中间件
 const cors = require('cors')
 const path = require('path');
+// 配置解析传输大小的中间件
+const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ limit: '50mb' ,extended: true}))
 app.use(cors())
 // 配置解析表单数据的中间件，注意：这个中间件，只能解析 application/x-www-form-urlencoded 格式的表单数据
 app.use(express.urlencoded({ extended: false }))
@@ -52,6 +55,8 @@ app.use((err, req, res, next) => {
   if (err instanceof joi.ValidationError) return res.cc(err)
   if (err.name === 'UnauthorizedError') return res.cc('身份认证失败！')
   // 未知的错误
+console.log(err);
+
   res.cc(err)
 })
 
