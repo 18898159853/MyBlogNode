@@ -20,10 +20,13 @@ exports.getShareListserver = (req, res) => {
 }
 // 网站列表
 exports.sharelist = (req, res) => {
-  const sqlCount = 'select count(*) as total from ev_share' ; // 查询总数量
-  db.query(sqlCount, (err, results0) => {
+  const pid = req.body.pid;
+  let sqlCount = `select count(*) as total from ev_share ` ; // 查询总数量
+  if (pid) {
+     sqlCount += ` where pid = ?` ; 
+  }
+  db.query(sqlCount,pid,(err, results0) => {
     if (err) return res.cc(err);
-    const pid = req.body.pid;
     const page = req.body.page;
     const size = req.body.size;
     let sql = 'select * from ev_share';
