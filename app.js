@@ -36,6 +36,7 @@ app.use(express.static("upload"))
 // 导入并使用用户路由模块
 const userRouter = require('./router/user')
 app.use('/api', userRouter)
+
 // 导入并使用用户信息路由模块
 const userinfoRouter = require('./router/userinfo')
 app.use('/my', userinfoRouter)
@@ -47,6 +48,15 @@ app.use('/my/article', artCateRouter)
 // 导入并使用文章列表路由模块
 const artListCateRouter = require('./router/artcatelist')
 app.use('/api', artListCateRouter)
+
+// 导入日历路由模块
+const calendarCateRouter = require('./router/calendar')
+app.use('/api', calendarCateRouter)
+
+// 导入网站分享路由模块
+const shareCateRouter = require('./router/share')
+app.use('/api', shareCateRouter)
+
 // 访问图片资源
 app.use('/api', express.static(path.join(__dirname, 'img')));
 // 定义错误级别的中间件
