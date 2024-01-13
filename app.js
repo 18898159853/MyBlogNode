@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 const expressJWT = require('express-jwt')
 const config = require('./config')
 app.use(
-  expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api/,'/my/article/cates'] })
+  expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api/,'/my/article/cates','/ip'] })
 )
 // 部署静态资源, 部署之后即可通过域名访问文件
 app.use(express.static("upload"))
@@ -56,7 +56,11 @@ app.use('/api', calendarCateRouter)
 // 导入网站分享路由模块
 const shareCateRouter = require('./router/share')
 app.use('/api', shareCateRouter)
-
+app.set('trust proxy', true);// 设置以后，req.ips是ip数组；如果未经过代理，则为[]. 若不设置，则req.ips恒为[]
+app.get('/ip', function(req, res){
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  res.send('Your IP address is ' + ip);
+});
 // 访问图片资源
 app.use('/api', express.static(path.join(__dirname, 'img')));
 // 定义错误级别的中间件
@@ -65,8 +69,6 @@ app.use((err, req, res, next) => {
   if (err instanceof joi.ValidationError) return res.cc(err)
   if (err.name === 'UnauthorizedError') return res.cc('身份认证失败！')
   // 未知的错误
-console.log(err);
-
   res.cc(err)
 })
 
