@@ -70,38 +70,33 @@ exports.list = (req, res) => {
   const message = req.body.message || ' '
   const pageSize = req.body.pageSize
   const currentPage = req.body.currentPage
+  let sqlCount = `select count(*) as total from ev_users ` ; // 查询总数量
   if (message !== '' && message !== null && message !== ' ') {
-    const sql =
-      'select * from ev_users where  username like ? or nickname like ? or email like ?' // 模糊查询
-    const values = ['%' + message + '%']
-    db.query(sql, [values, values, values], (err, results) => {
-      if (err) return res.cc(err)
-      res.send({
-        status: 0,
-        message: '获取成功',
-        data: results,
-      })
-    })
-  } else {
-    const sql = 'select count(*) as total from ev_users' // 查询总数量
-    db.query(sql, (err, results) => {
-      if (err) return res.cc(err)
-      const sql1 = 'select * from ev_users LIMIT ? OFFSET ?' // 查询分页数据
-      db.query(
-        sql1,
-        [Number(pageSize), (currentPage - 1) * pageSize],
-        (err, results1) => {
-          if (err) return res.cc(err)
-          res.send({
-            status: 0,
-            message: '获取成功',
-            data: results1,
-            total: results[0].total, //总数据量
-          })
-        }
-      )
-    })
+     sqlCount += ` where username like ? or nickname like ? or email like ?` ; 
   }
+    const values = ['%' + message + '%']
+    db.query(sqlCount, [values, values, values], (err, results0) => {
+      if (err) return res.cc(err)
+      let sql = 'select * from ev_users';
+      let params = [];
+      if (message !== '' && message !== null && message !== ' ') {
+        sql += ' where username like ? or nickname like ? or email like ?';
+        params=[values, values, values]
+      }
+      if (pageSize && currentPage) {
+        sql += ' LIMIT ? OFFSET ?';
+        params.push(Number(pageSize), (currentPage - 1) * pageSize);
+      }
+      db.query(sql, params, (err, results) => {
+        if (err) return res.cc(err);
+        res.send({
+          status: 0,
+          message: '获取成功',
+          data: results,
+          total: results0[0].total,
+        });
+      });
+    })
 }
 
 //删除用户
