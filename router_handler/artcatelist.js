@@ -3,11 +3,20 @@ const db = require('../db/index')
 exports.getArtCateList = (req, res) => {
   const pageSize = req.body.pageSize // 获取每页显示多少条数据
   const currentPage = req.body.currentPage // 获取当前第几页
-  const sql = 'select count(*) as total from ev_articlelist' // 查询总数量
+  const classify = req.body.classify // 文章分类
+  let sql = 'select count(*) as total from ev_articlelist' // 查询总数量
   db.query(sql, (err, results) => {
     if (err) return res.cc(err)
-    const sql = 'select * from ev_articlelist order by id desc  LIMIT ? OFFSET ?'
-    db.query(sql, [Number(pageSize), (currentPage - 1) * pageSize],(err, results1) => {
+    let sql = 'select * from ev_articlelist '
+    let params = []
+    if (classify) {
+      sql += ` where classify='${classify}'`
+    }
+    if (pageSize&&currentPage) {
+      sql += ` order by id desc  LIMIT ? OFFSET ?`
+      params.push(Number(pageSize), (currentPage - 1) * pageSize)
+    }
+    db.query(sql, params,(err, results1) => {
       if (err) return res.cc(err)
       res.send({
         status: 0,
