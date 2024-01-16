@@ -5,6 +5,9 @@ exports.getArtCateList = (req, res) => {
   const currentPage = req.body.currentPage // 获取当前第几页
   const classify = req.body.classify // 文章分类
   let sql = 'select count(*) as total from ev_articlelist' // 查询总数量
+  if (classify) {
+    sql += ` where classify='${classify}'`
+  }
   db.query(sql, (err, results) => {
     if (err) return res.cc(err)
     let sql = 'select * from ev_articlelist '
