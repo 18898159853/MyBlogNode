@@ -56,14 +56,20 @@ app.use('/api', calendarCateRouter)
 // 导入网站分享路由模块
 const shareCateRouter = require('./router/share')
 app.use('/api', shareCateRouter)
-app.set('trust proxy', true);// 设置以后，req.ips是ip数组；如果未经过代理，则为[]. 若不设置，则req.ips恒为[]
+// app.set('trust proxy', true);// 设置以后，req.ips是ip数组；如果未经过代理，则为[]. 若不设置，则req.ips恒为[]
 app.get('/ip', function(req, res){
   let ip = req.headers['x-forwarded-for'] ||
   req.connection.remoteAddress ||
   req.socket.remoteAddress ||
   Requereqst.connection.socket.remoteAddress;
-  res.send('Your IP address is ' + req);
+  res.send({
+    ip: ip
+  });
 });
+// 导入访问用户的信息
+const userInfoRouter = require('./router/userAccessInfo')
+app.use('/api', userInfoRouter)
+
 // 访问图片资源
 app.use('/api', express.static(path.join(__dirname, 'img')));
 // 定义错误级别的中间件
