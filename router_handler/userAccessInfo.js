@@ -3,7 +3,7 @@ const e = require('express');
 const db = require('../db/index')
 // 获取访问用户信息数据
 exports.getUserAccessInfo = (req, res) => {
-  const sql = 'select * from ev_useraccessinfo';
+  const sql = 'select * from ev_useraccessinfo order by accesstime desc';
   db.query(sql, (err, results) => {
     if (err) return res.cc(err);
       res.send({
