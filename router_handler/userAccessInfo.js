@@ -15,34 +15,32 @@ exports.getUserAccessInfo = (req, res) => {
 }
 // 添加访问用户的信息
 exports.addUserAccessInfo = (req, res) => {
-  const info = req.body
-  const sqlip = 'select * from ev_useraccessinfo where ip=?'
+  const info = req.body;
+  const sqlip = 'SELECT * FROM ev_useraccessinfo WHERE ip = ?';
   db.query(sqlip, info.ip, (err, results) => {
-    if (err) return res.cc(err)
-    const latestItem = results.reduce((latest, item) => {  
-      if (new Date(item.accesstime) > new Date(latest.accesstime)) {  
-          return item;  
-      } else {  
-          return latest;  
-      }  
-    }, results[0]); // 初始值设为数组的第一个元素，确保第一次比较就会返回正确的最大值
-    let currentTime = new Date().getTime(); //当前时间
-    const dateObject = new Date(latestItem.accesstime);  
-    const timestamp = Math.floor(dateObject.getTime()); // 当前ip最新存储时间
-    if (timestamp+1000*60*60*1<currentTime) {
-      const sql = 'insert into ev_useraccessinfo set ? '
-      db.query(sql, info, (err, results) => {
-        if (err) return res.cc(err)
-        res.send({
-          status: 0,
-          message: '添加成功',
-        })
-      })
-    }else{
-      res.send({
-        status: 1,
-        message: '失败',
-      })
+    if (err) return res.cc(err);
+    const canInsert = results.length === 0 || isAccessTimeExpired(results);
+    if (canInsert) {
+      const sql = 'INSERT INTO ev_useraccessinfo SET ?';
+      db.query(sql, info, (err, insertResults) => {
+        if (err) return res.status(500).send(err);
+        return res.send({ status: 0, message: '添加成功' });
+      });
+    } else {
+      return res.send({ status: 1, message: '失败' });
     }
-  })
+  });
+};
+// 判断最后一次访问时间距离当前时间是否超过1小时 防止重复请求
+function isAccessTimeExpired(results) {
+  const latestItem = results.reduce((latest, item) => {
+    if (new Date(item.accesstime) > new Date(latest.accesstime)) {
+      return item;
+    } else {
+      return latest;
+    }
+  }, results[0]);
+  const currentTime = new Date().getTime();
+  const timestamp = Math.floor(new Date(latestItem.accesstime).getTime());
+  return timestamp + 1000 * 60 * 60 * 1 < currentTime;
 }
