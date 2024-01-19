@@ -1,17 +1,29 @@
 // 导入数据库操作模块
-const e = require('express');
 const db = require('../db/index')
 // 获取访问用户信息数据
 exports.getUserAccessInfo = (req, res) => {
-  const sql = 'select * from ev_useraccessinfo order by accesstime desc';
-  db.query(sql, (err, results) => {
+  let sqlCount = `select count(*) as total from ev_useraccessinfo ` ; // 查询总数量
+  db.query(sqlCount,(err, results0) => {
     if (err) return res.cc(err);
+    const page = req.body.currentPage;
+    const size = req.body.pageSize;
+    let sql = 'select * from ev_useraccessinfo order by accesstime desc';
+    let params = [];
+    if (page && size) {
+      sql += ' LIMIT ? OFFSET ?';
+      params.push(Number(size), (page - 1) * size);
+    }
+    db.query(sql, params, (err, results) => {
+      if (err) return res.cc(err);
       res.send({
         status: 0,
-        message: '获取全部用户信息列表成功！',
-        data: results
-      })
-  })
+        message: '获取用户信息列表成功！',
+        data: results,
+        total: results0[0].total,
+      });
+    });
+  });
+ 
 }
 // 添加访问用户的信息
 exports.addUserAccessInfo = (req, res) => {

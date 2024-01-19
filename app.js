@@ -56,6 +56,11 @@ app.use('/api', calendarCateRouter)
 // 导入网站分享路由模块
 const shareCateRouter = require('./router/share')
 app.use('/api', shareCateRouter)
+
+// 导入随拍路由模块
+const somePhotoRouter = require('./router/somePhoto')
+app.use('/api', somePhotoRouter)
+
 // app.set('trust proxy', true);// 设置以后，req.ips是ip数组；如果未经过代理，则为[]. 若不设置，则req.ips恒为[]
 app.get('/ip', function(req, res){
   let ip = req.headers['x-forwarded-for'] ||
