@@ -2,7 +2,7 @@
 const db = require('../db/index')
 // 随拍列表
 exports.somePhotolist = (req, res) => {
-  const sql = 'select * from ev_somephoto '
+  const sql = 'select * from ev_somephoto order by time desc '
   db.query(sql, (err, results) => {
     if (err) return res.cc(err)
     res.send({
