@@ -6,6 +6,7 @@ const joi = require('@hapi/joi')
 // 导入并配置 cors 中间件
 const cors = require('cors')
 const path = require('path');
+
 // 配置解析传输大小的中间件
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ limit: '50mb' ,extended: true}))
@@ -85,7 +86,9 @@ app.use((err, req, res, next) => {
   // 未知的错误
   res.cc(err)
 })
-
+// 导入并配置 swagger
+const swaggerInit = require('./swagger.js')
+swaggerInit(app)
 // 启动服务器
 app.listen(3007, () => {
   console.log('api server running at http://127.0.0.1:3007')
