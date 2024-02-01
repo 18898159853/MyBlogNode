@@ -2,13 +2,25 @@
 const db = require('../db/index')
 // 随拍列表
 exports.somePhotolist = (req, res) => {
-  const sql = 'select * from ev_somephoto order by time desc '
-  db.query(sql, (err, results) => {
-    if (err) return res.cc(err)
-    res.send({
-      status: 0,
-      message: '获取成功',
-      data: results,
+  let sqlCount = `select count(*) as total from ev_somephoto ` ; // 查询总数量
+  db.query(sqlCount, (err, results1) => {
+    if (err) return res.cc(err);
+    const page = req.body.currentPage;
+    const size = req.body.pageSize;
+    let sql = 'select * from ev_somephoto order by time desc';
+    let params = [];
+    if (page && size) {
+      sql += ' LIMIT ? OFFSET ?';
+      params.push(Number(size), (page - 1) * size);
+    }
+    db.query(sql, params,(err, results) => {
+      if (err) return res.cc(err)
+      res.send({
+        status: 0,
+        message: '获取成功',
+        data: results,
+        total: results1[0].total,
+      })
     })
   })
 }
