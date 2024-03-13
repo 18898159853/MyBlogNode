@@ -19,7 +19,7 @@ const {
 router.post('/reguser', expressJoi(reg_add_schema), user_handler.regUser)
 // 登录
 router.post('/login', expressJoi(reg_login_schema), user_handler.login)
-router.post('/getlist', user_handler.list)
+router.post('/nojwt/getlist', user_handler.list)
 router.post('/dellist', expressJoi(reg_delte_schema), user_handler.dellist)
 router.post(
   '/editlist',

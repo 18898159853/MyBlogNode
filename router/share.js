@@ -17,9 +17,9 @@ const router = express.Router()
  *     '400':
  *       description: Invalid name value
  */
-router.get('/getShareListserver', share_handler.getShareListserver)
+router.get('/nojwt/getShareListserver', share_handler.getShareListserver)
 // 获取网站数据
-router.post('/getshare', share_handler.sharelist)
+router.post('/nojwt/getshare', share_handler.sharelist)
 //添加网站数据
 
 /**
@@ -48,7 +48,7 @@ router.post('/editshare', share_handler.editshare)
 // 删除网站数据
 router.post('/delshare/:id', share_handler.delshare)
 // 获取网站分类数据
-router.get('/getsharecate', share_handler.sharecatelist)
+router.get('/nojwt/getsharecate', share_handler.sharecatelist)
 // 添加网站分类数据
 router.post('/addsharecate', share_handler.addsharecate)
 // 编辑网站分类数据

@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   // status 默认值为 1，表示失败的情况
   // err 的值，可能是一个错误对象，也可能是一个错误的描述字符串
   res.cc = function (err, status = 1) {
-    res.send({
+    res.status(401).send({
       status,
       message: err instanceof Error ? err.message : err,
     })
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 const expressJWT = require('express-jwt')
 const config = require('./config')
 app.use(
-  expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api/,'/my/article/cates','/ip'] })
+  expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\/nojwt/,'/my/article/cates','/ip','/api/login',/^\/apiimg/]})
 )
 // 部署静态资源, 部署之后即可通过域名访问文件
 app.use(express.static("upload"))
@@ -44,7 +44,7 @@ app.use('/my', userinfoRouter)
 
 // 导入并使用文章分类路由模块
 const artCateRouter = require('./router/artcate')
-app.use('/my/article', artCateRouter)
+app.use('/api', artCateRouter)
 
 // 导入并使用文章列表路由模块
 const artListCateRouter = require('./router/artcatelist')
@@ -77,12 +77,12 @@ const userInfoRouter = require('./router/userAccessInfo')
 app.use('/api', userInfoRouter)
 
 // 访问图片资源
-app.use('/api', express.static(path.join(__dirname, 'img')));
+app.use('/apiimg', express.static(path.join(__dirname, 'img')));
 // 定义错误级别的中间件
 app.use((err, req, res, next) => {
   // 验证失败导致的错误
   if (err instanceof joi.ValidationError) return res.cc(err)
-  if (err.name === 'UnauthorizedError') return res.cc('身份认证失败！')
+  if (err.name === 'UnauthorizedError') return res.cc('无权限！')
   // 未知的错误
   res.cc(err)
 })

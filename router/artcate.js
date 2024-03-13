@@ -10,7 +10,7 @@ const {
   reg_delartacte_schema,
 } = require('../schema/user')
 // 获取文章分类的列表数据
-router.get('/cates', artcate_handler.getArticleCates)
+router.get('/nojwt/cates', artcate_handler.getArticleCates)
 router.post(
   '/addcate',
   expressJoi(reg_artacte_schema),

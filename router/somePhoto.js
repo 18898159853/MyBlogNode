@@ -4,7 +4,7 @@ const somePhtoto_handler = require('../router_handler/somePhoto')
 // 创建路由对象
 const router = express.Router()
 // 获取日历数据
-router.post('/getsomePhtoto', somePhtoto_handler.somePhotolist)
+router.post('/nojwt/getsomePhtoto', somePhtoto_handler.somePhotolist)
 //添加日历数据
 router.post('/addsomePhtoto', somePhtoto_handler.addsomePhoto)
 // 编辑日历数据

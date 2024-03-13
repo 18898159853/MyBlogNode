@@ -5,12 +5,12 @@ const artcate_handler = require('../router_handler/artcatelist')
 const router = express.Router()
 // 获取文章列表
 router.post(
-  '/getArtCateList',
+  '/nojwt/getArtCateList',
   artcate_handler.getArtCateList
 )
 // 获取文章信息
 router.get(
-  '/getArtCate/:id',
+  '/nojwt/getArtCate/:id',
   artcate_handler.getArtCate
 )
 // 添加文章

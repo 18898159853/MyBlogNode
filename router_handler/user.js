@@ -129,7 +129,7 @@ exports.updatelist = (req, res) => {
 
 // 上传
 exports.upload=(req,res) =>{
-  const url = "http://localhost:3007/api/" + req.file.filename
+  const url = "http://localhost:3007/apiimg/" + req.file.filename
   res.send({
     status:0,
     message:'上传成功',
